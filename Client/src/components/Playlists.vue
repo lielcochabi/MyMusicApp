@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery">
+    <div class="Playlists">
       <div class="song-card" v-for="(song, index) in songs" :key="index">
         <img :src="song.imageUrl" :alt="song.name" class="song-image">
         <div class="song-name">{{ song.name }}</div>
@@ -30,7 +30,7 @@
   </script>
   
   <style scoped>
-  .gallery {
+  .Playlists {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-gap: 20px;

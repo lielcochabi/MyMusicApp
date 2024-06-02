@@ -12,7 +12,7 @@ const count = ref(0)
 <template>
     <nav class="navbar">
       <div class="navbar-brand">
-        <img src="https://via.placeholder.com/40" alt="Logo" class="logo">
+        <img src="https://cdn-icons-png.flaticon.com/128/3669/3669986.png" alt="Logo" class="logo">
         <span class="brand-name">{{ msg }}</span>
       </div>
       <ul class="navbar-menu">
@@ -34,7 +34,6 @@ const count = ref(0)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
   color: white;
 }
 
@@ -67,9 +66,14 @@ const count = ref(0)
 .nav-link {
   color: white;
   text-decoration: none;
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .nav-link:hover {
   text-decoration: underline;
+  color: #1db954; /* Light green color on hover */
+  background-color: #1a1a1a; /* Slightly darker background color for hover effect */
+  padding: 5px 10px; /* Add padding to highlight the hover state */
+  border-radius: 5px; /* Rounded corners for hover state */
 }
 </style>

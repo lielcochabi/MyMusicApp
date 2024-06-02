@@ -1,14 +1,46 @@
-<script setup>
-import Navbar from './components/NavBar.vue'
-import Sidenav from './components/SideNav.vue'
-import SongsGallery from './components/SongsGallery.vue'
-</script>
-
 <template>
-  <Navbar msg="MySongApp" />
-  <Sidenav />
-  <SongsGallery />
+  <div >
+    <Navbar msg="MySongApp" />
+    <Sidenav @changeTab="changeTab"/>
+    <Playlists v-if="currentTab === 'Playlists'" />
+    <Home @PlaylistTab="PlaylistTab"  v-if="currentTab === 'Home'" />
+    <About v-if="currentTab === 'About'|| currentTab === null" />
+  </div>
 </template>
+
+<script>
+import { ref } from 'vue';
+import Navbar from './components/NavBar.vue';
+import Sidenav from './components/SideNav.vue';
+import Playlists from './components/Playlists.vue';
+import Home from './components/Home.vue';
+import About from './components/About.vue';
+import SignUpForm from './components/SignUpForm.vue';
+
+export default {
+  components: {
+    Navbar,
+    Sidenav,
+    Playlists,
+    Home,
+    About,
+  },
+  data() {
+    return {
+      currentTab: "",
+    }
+  },
+  methods: {
+    changeTab(tab) {
+
+      this.currentTab = tab.__name || tab.name;
+    },
+    PlaylistTab(playTab) {
+      this.changeTab(playTab)
+    }
+  },
+};
+</script>
 
 <style scoped>
 .logo {

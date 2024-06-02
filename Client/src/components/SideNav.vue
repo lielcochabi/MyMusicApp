@@ -1,16 +1,42 @@
 <template>
     <div class="sidenav">
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Contact</a></li>
+        <li @click="changeTabs(tab)" v-for="(tab, index) in tabs" :key="index">{{ tab.name }}</li>
       </ul>
     </div>
   </template>
   
-  <script setup>
-  // No script setup needed since we don't have any reactive logic
+  <script>
+import Playlists from './Playlists.vue';
+import Home from './Home.vue';
+import About from './About.vue';
+
+   export default {
+      data(){
+        return{
+          tabs: [
+        { name: "Home", text: "home"},
+        { name: "Playlists", text: "Playlists" },
+        { name: "About", text: " About " },
+        // { name: "Settings", text: "settings" },
+      ], 
+        }
+      },
+      methods:{
+        changeTabs(tab){
+           if(tab.name === "Playlists"){
+              this.$emit('changeTab', Playlists); //send the component to the parent
+             }
+           else if(tab.name === "Home"){
+             this.$emit('changeTab', Home);
+           }
+           else if (tab.name=== "About"){
+             this.$emit('changeTab', About);
+
+           }
+        }
+      }
+   }
   </script>
   
   <style scoped>
@@ -34,15 +60,26 @@
   li {
     padding: 8px 8px;
     text-align: left;
+    color: white; /* Text color */
+    font-size: 1.2em;
+  }
+  
+  li:hover {
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition for hover effect */
+    text-decoration: underline;
+    color: #1db954; /* Light green color on hover */
+    background-color: #1a1a1a; /* Slightly darker background color for hover effect */
+    padding: 5px 10px; /* Add padding to highlight the hover state */
+    border-radius: 5px; /* Rounded corners for hover state */
   }
   
   a {
     text-decoration: none;
-    color: white;
+    color: inherit;
   }
   
   a:hover {
     background-color: #555;
   }
   </style>
-  
