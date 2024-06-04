@@ -6,38 +6,37 @@
     </div>
   </template>
   
-  <script>
-import Playlists from './Playlists.vue';
-import Home from './Home.vue';
-import About from './About.vue';
+<script>
+  import Playlists from './Playlists.vue';
+  import Home from './Home.vue';
+  import About from './About.vue';
 
-   export default {
-      data(){
-        return{
-          tabs: [
-        { name: "Home", text: "home"},
-        { name: "Playlists", text: "Playlists" },
-        { name: "About", text: " About " },
-        // { name: "Settings", text: "settings" },
-      ], 
-        }
+  export default {
+    data(){
+      return{
+        tabs: [
+      { name: "Home", text: "home"},
+      { name: "Playlists", text: "Playlists" },
+      { name: "About", text: " About " },
+      // { name: "Settings", text: "settings" },
+    ], 
+       }
       },
-      methods:{
-        changeTabs(tab){
-           if(tab.name === "Playlists"){
-              this.$emit('changeTab', Playlists); //send the component to the parent
-             }
-           else if(tab.name === "Home"){
-             this.$emit('changeTab', Home);
-           }
-           else if (tab.name=== "About"){
-             this.$emit('changeTab', About);
-
-           }
+    methods:{
+      changeTabs(tab){
+        if(tab.name === "Playlists"){
+          this.$emit('changeTab', Playlists); //send the component to the parent
+          }
+        else if(tab.name === "Home"){
+          this.$emit('changeTab', Home);
+          }
+        else if (tab.name=== "About"){
+          this.$emit('changeTab', About);
+          }
         }
       }
    }
-  </script>
+</script>
   
   <style scoped>
   .sidenav {

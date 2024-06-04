@@ -2,7 +2,7 @@
     <div class="signup-page">
       <div class="signup-container">
         <h1>Sign Up for MusicApp</h1>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="Submit">
           <div class="input-group">
             <label for="email">Email</label>
             <input type="email" id="email" v-model="form.email" required />
@@ -29,40 +29,50 @@
               <option value="" disabled>Select your gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="non-binary">Non-binary</option>
-              <option value="prefer-not-to-say">Prefer not to say</option>
             </select>
           </div>
-          <button type="submit" class="signup-button">Sign Up</button>
+          <button @click="Submit" type="submit" class="signup-button">Sign Up</button>
         </form>
       </div>
     </div>
   </template>
   
-  <script setup>
-  import { ref } from 'vue'
+  <script >
   
-  const form = ref({
-    email: '',
-    confirmEmail: '',
-    password: '',
-    name: '',
-    dob: '',
-    gender: '',
-  })
-  
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', form.value)
-  }
+    export default {
+      data(){
+        return{
+            form:({
+            email: '',
+            confirmEmail: '',
+            password: '',
+            name: '',
+            dob: '',
+            gender: '',
+            })
+        }
+      },
+ 
+    
+       methods:{
+        submit(){
+          if(this.form.email === this.form.confirmEmail){
+            this.$emit('submit', "this.form");
+          } else {
+            alert("Emails do not match");
+          }
+        },
+      }
+    }
   </script>
-  
   <style scoped>
+
   .signup-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     background-color: #191414; /* Spotify dark background */
     color: white;
     font-family: Arial, sans-serif;
@@ -124,4 +134,33 @@
     background-color: #1ed760; /* Lighter green on hover */
   }
   </style>
-  
+      <!-- Navbar -->
+      <!-- <script>
+      import { ref } from 'vue';
+      
+      export default {
+        setup() {
+          const isSubmitted = ref(false);
+          const username = ref('');
+          const email = ref('');
+          const password = ref('');
+      
+          const handleSubmit = () => {
+            // Handle form submission logic here
+            // For example, you can send the form data to your server
+      
+            // After successful submission, update the isSubmitted flag
+            isSubmitted.value = true;
+          };
+      
+          return {
+            isSubmitted,
+            username,
+            email,
+            password,
+            handleSubmit
+          };
+        }
+      };
+      </script> -->
+      

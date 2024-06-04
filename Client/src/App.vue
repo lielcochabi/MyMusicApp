@@ -1,15 +1,17 @@
 <template>
-  <div >
-    <Navbar msg="MySongApp" />
+  <div>
+    <SignUpForm @submit="submit" v-if="!submitted" />
+    <div  v-if="submitted">
+    <Navbar msg="MySongApp"></Navbar>
     <Sidenav @changeTab="changeTab"/>
-    <Playlists v-if="currentTab === 'Playlists'" />
+    <Playlists v-if="currentTab === 'Playlists'"> </Playlists>
     <Home @PlaylistTab="PlaylistTab"  v-if="currentTab === 'Home'" />
     <About v-if="currentTab === 'About'|| currentTab === null" />
+  </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
 import Navbar from './components/NavBar.vue';
 import Sidenav from './components/SideNav.vue';
 import Playlists from './components/Playlists.vue';
@@ -24,10 +26,21 @@ export default {
     Playlists,
     Home,
     About,
+    SignUpForm,
   },
   data() {
     return {
       currentTab: "",
+      formValue:({
+            email: '',
+            confirmEmail: '',
+            password: '',
+            name: '',
+            dob: '',
+            gender: '',
+            }),
+      submitted:false,
+
     }
   },
   methods: {
@@ -37,9 +50,18 @@ export default {
     },
     PlaylistTab(playTab) {
       this.changeTab(playTab)
-    }
-  },
-};
+    },
+    submit(formValue) {
+      console.log('Form ', formValue);
+      this.submitted=true
+      console.log(this.submitted)
+      this.changeTab('Home')
+
+
+      // Handle the form value as needed
+    },
+  }
+}
 </script>
 
 <style scoped>
