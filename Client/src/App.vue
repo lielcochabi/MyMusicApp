@@ -1,23 +1,23 @@
 <template>
   <div>
-    <SignUpForm @submit="submit" v-if="!submitted" />
-    <div  v-if="submitted">
-    <Navbar msg="MySongApp"></Navbar>
-    <Sidenav @changeTab="changeTab"/>
-    <Playlists v-if="currentTab === 'Playlists'"> </Playlists>
-    <Home @PlaylistTab="PlaylistTab"  v-if="currentTab === 'Home'" />
-    <About v-if="currentTab === 'About'|| currentTab === null" />
-  </div>
+    <SignUpForm  @submit="submit" v-if="currentTab === 'SignUpForm'" />
+    <Navbar @changeTabs="changeTabs" msg="MySongApp" />
+    <Sidenav @changeTab="changeTab" />
+    <Playlists v-if="currentTab === 'Playlists'" />
+    <Home @PlaylistTab="PlaylistTab" v-if="currentTab === 'Home'" />
+    <About  v-if="currentTab === 'About' || currentTab === null" />
+    <Player />
   </div>
 </template>
 
 <script>
 import Navbar from './components/NavBar.vue';
 import Sidenav from './components/SideNav.vue';
-import Playlists from './components/Playlists.vue';
-import Home from './components/Home.vue';
-import About from './components/About.vue';
-import SignUpForm from './components/SignUpForm.vue';
+import Playlists from './views/Playlists.vue';
+import Home from './views/Home.vue';
+import About from './views/About.vue';
+import SignUpForm from './views/SignUpForm.vue';
+import Player from './components/Player.vue';
 
 export default {
   components: {
@@ -27,41 +27,41 @@ export default {
     Home,
     About,
     SignUpForm,
+    Player,
   },
   data() {
     return {
       currentTab: "",
-      formValue:({
-            email: '',
-            confirmEmail: '',
-            password: '',
-            name: '',
-            dob: '',
-            gender: '',
-            }),
-      submitted:false,
-
-    }
+      formValue: {
+        email: '',
+        confirmEmail: '',
+        password: '',
+        name: '',
+        dob: '',
+        gender: '',
+      },
+      submitted: true,
+    };
   },
   methods: {
     changeTab(tab) {
-
       this.currentTab = tab.__name || tab.name;
     },
     PlaylistTab(playTab) {
-      this.changeTab(playTab)
+      this.changeTab(playTab);
     },
     submit(formValue) {
-      console.log('Form ', formValue);
-      this.submitted=true
-      console.log(this.submitted)
-      this.changeTab('Home')
-
-
-      // Handle the form value as needed
+      console.log('Form:', formValue);
+      this.submitted = true;
+      console.log(this.submitted);
+      this.changeTab('Home');
+    },
+    changeTabs(signIn) {
+      console.log(signIn);
+      this.changeTab(signIn);
     },
   }
-}
+};
 </script>
 
 <style scoped>

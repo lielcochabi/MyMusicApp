@@ -1,15 +1,15 @@
 <template>
     <div class="sidenav">
       <ul>
-        <li @click="changeTabs(tab)" v-for="(tab, index) in tabs" :key="index">{{ tab.name }}</li>
+        <li  @click="changeTabs(tab)" v-for="(tab, index) in tabs" :key="index">{{ tab.name }}</li>
       </ul>
     </div>
   </template>
   
 <script>
-  import Playlists from './Playlists.vue';
-  import Home from './Home.vue';
-  import About from './About.vue';
+  import Playlists from '../views/Playlists.vue';
+  import Home from '../views/Home.vue';
+  import About from '../views/About.vue';
 
   export default {
     data(){
@@ -22,22 +22,13 @@
     ], 
        }
       },
-    methods:{
-      changeTabs(tab){
-        if(tab.name === "Playlists"){
-          this.$emit('changeTab', Playlists); //send the component to the parent
-          }
-        else if(tab.name === "Home"){
-          this.$emit('changeTab', Home);
-          }
-        else if (tab.name=== "About"){
-          this.$emit('changeTab', About);
-          }
-        }
+      methods: {
+        changeTabs(tab) {
+          this.$emit('changeTab', tab);
+        },
       }
-   }
+  };
 </script>
-  
   <style scoped>
   .sidenav {
     height: 100%;
