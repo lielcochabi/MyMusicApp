@@ -1,12 +1,13 @@
 <template>
   <div>
-    <SignUpForm  @submit="submit" v-if="currentTab === 'SignUpForm'" />
-    <Navbar @changeTabs="changeTabs" msg="MySongApp" />
+    <SignUpForm @submit="submit" v-if="currentTab === 'SignUpForm'" />
+    <Navbar @changeTabs="changeTabs" @search="handleSearch" msg="MySongApp" />
     <Sidenav @changeTab="changeTab" />
     <Playlists v-if="currentTab === 'Playlists'" />
     <Home @PlaylistTab="PlaylistTab" v-if="currentTab === 'Home'" />
-    <About  v-if="currentTab === 'About' || currentTab === null" />
-    <Player />
+    <About v-if="currentTab === 'About' || currentTab === null" />
+    <Spotify ref="spotify" @update-current-playing="updateCurrentPlaying" />
+    <Player :currentTrack="currentTrack" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import Home from './views/Home.vue';
 import About from './views/About.vue';
 import SignUpForm from './views/SignUpForm.vue';
 import Player from './components/Player.vue';
+import Spotify from './components/Spotify.vue';
 
 export default {
   components: {
@@ -28,6 +30,7 @@ export default {
     About,
     SignUpForm,
     Player,
+    Spotify,
   },
   data() {
     return {
@@ -41,6 +44,7 @@ export default {
         gender: '',
       },
       submitted: true,
+      currentTrack: null
     };
   },
   methods: {
@@ -60,6 +64,12 @@ export default {
       console.log(signIn);
       this.changeTab(signIn);
     },
+    handleSearch(query) {
+      this.$refs.spotify.searchSongs(query);
+    },
+    updateCurrentPlaying(track) {
+      this.currentTrack = track;
+    }
   }
 };
 </script>

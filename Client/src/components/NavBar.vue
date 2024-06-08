@@ -4,47 +4,66 @@
       <img src="https://cdn-icons-png.flaticon.com/128/3669/3669986.png" alt="Logo" class="logo" />
       <span class="brand-name">{{ msg }}</span>
     </div>
-    <ul class="navbar-menu">
-      <li class="nav-item" v-for="(tab, index) in tabs" :key="index">
-        <a href="#" class="nav-link" @click="changeTabs(tab)">{{ tab.text }}</a>
-      </li>
-    </ul>
+    <div class="navbar-right">
+      <input v-model="searchQuery" @keyup.enter="emitSearchQuery" class="search-bar" placeholder="Search for a song" />
+      <ul class="navbar-menu">
+        <li class="nav-item">
+          <a href="#" class="nav-link" @click="handleUserAction">
+            <span v-if="user.name">Welcome, {{ user.name }}</span>
+            <span v-else>Sign Up</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
-<script>
-import { ref, reactive } from 'vue';
-import Playlists from '../views/Playlists.vue';
-import Home from '../views/Home.vue';
-import SignUpForm from '../views/SignUpForm.vue';
 
+<script>
 export default {
   name: 'Navbar',
   props: {
     msg: String,
-    accountName: String,
   },
   data() {
     return {
-      count: 1,
-      tabs: reactive([
-        { name: "Home", text: "Home" },
-        { name: "Playlists", text: "Playlists" },
-        { name: "SignUpForm", text: "Sign Up" },
-      ]),
+      searchQuery: '',
+      user: {}, // Add a user data property
     };
   },
   methods: {
-    changeTabs(tab) {
-      this.$emit('changeTabs', tab);
+    emitSearchQuery() {
+      this.$emit('search', this.searchQuery);
     },
+    handleUserAction() {
+      if (this.user.name) {
+        this.logout();
+      } else {
+        this.$emit('changeTabs', { name: 'SignUpForm', text: 'Sign Up' });
+      }
+    },
+    logout() {
+      localStorage.removeItem('user');
+      this.user = {};
+      this.$emit('user-logged-out');
+    },
+    updateUser(userData) {
+      this.user = userData;
+    }
   },
+  created() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      this.user = JSON.parse(userData);
+    }
+  }
 };
 </script>
+
 <style scoped>
 .navbar {
   position: absolute;
   top: 0;
-  width: 100vw;
+  width: 100%;
   left: 0;
   z-index: 2;
   display: flex;
@@ -52,11 +71,14 @@ export default {
   align-items: center;
   color: white;
   background-color: #040404;
+  padding: 10px 20px;
+  box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
+  margin-left: 0; /* Remove left padding to align with the wall */
 }
 
 .logo {
@@ -69,13 +91,25 @@ export default {
   font-size: 1.2rem;
 }
 
+.navbar-right {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Add margin to the right side */
+}
+
+.search-bar {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  width: 300px; /* Adjust width as needed */
+  margin-right: 20px;
+}
+
 .navbar-menu {
   display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  margin-left: auto; /* Add this line */
-  margin-right: 20px; /* Add this line for right-side spacing */
 }
 
 .nav-item {
@@ -94,5 +128,16 @@ export default {
   background-color: #1a1a1a;
   padding: 5px 10px;
   border-radius: 5px;
+}
+
+.user-name {
+  margin-left: 20px;
+  color: #1db954;
+  font-size: 1rem;
+  cursor: pointer; /* Add cursor pointer to indicate clickable */
+}
+
+.search-results {
+  margin-top: 60px;
 }
 </style>

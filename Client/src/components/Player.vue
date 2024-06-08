@@ -1,16 +1,15 @@
 <template>
   <div class="player">
-    <div class="track-info">
-      <img src="https://via.placeholder.com/50" alt="Album Art" />
+    <div class="track-info" v-if="currentTrack">
+      <img :src="currentTrack.album.images[0]?.url" alt="Album Art" />
       <div class="track-details">
-        <h4>Track Title</h4>
-        <p>Artist Name</p>
+        <h4>{{ currentTrack.name }}</h4>
+        <p>{{ currentTrack.artists.map(artist => artist.name).join(', ') }}</p>
       </div>
     </div>
     <div class="controls">
       <button @click="prevTrack">Previous</button>
-      <button @click="playPauseTrack"
-              :class="{ 'playing': isPlaying }">Play/Pause</button>
+      <button @click="playPauseTrack" :class="{ 'playing': isPlaying }">Play/Pause</button>
       <button @click="nextTrack">Next</button>
     </div>
   </div>
@@ -19,6 +18,9 @@
 <script>
 export default {
   name: 'Player',
+  props: {
+    currentTrack: Object
+  },
   data() {
     return {
       isPlaying: false
