@@ -1,9 +1,13 @@
-// src/auth.js
+//this page giving the option to connect to your spotify account through this website
+//this website does not currently use this but keeping it as an option
 
-// Your Spotify application's Client ID
-const CLIENT_ID = '63df0d7b18364e369c2b704ebde82427'; // Replace with your actual Client ID
-// The URI to which Spotify will redirect after authorization
-const REDIRECT_URI = 'http://localhost:5173/'; // Replace with your actual redirect URI
+
+//auth.js accessing the spotify db
+// spotify client id 
+const CLIENT_ID = '63df0d7b18364e369c2b704ebde82427'; 
+
+//keeping for future options
+const REDIRECT_URI = 'http://localhost:5173/'; // the url after excessing the db spotify will redirect to (incase of connecting to spotify account)
 
 // Function to generate the Spotify authorization URL
 export function getAuthUrl() {

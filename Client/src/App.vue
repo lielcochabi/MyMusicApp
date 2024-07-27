@@ -1,13 +1,17 @@
 <template>
   <div>
-    <SignUpForm @submit="submit" v-if="currentTab === 'SignUpForm'" />
-    <Navbar @changeTabs="changeTabs" @search="handleSearch" msg="MySongApp" />
-    <Sidenav @changeTab="changeTab" />
-    <Playlists v-if="currentTab === 'Playlists'" />
-    <Home @PlaylistTab="PlaylistTab" v-if="currentTab === 'Home'" />
-    <About v-if="currentTab === 'About' || currentTab === null" />
-    <Spotify ref="spotify" @update-current-playing="updateCurrentPlaying" />
-    <Player :currentTrack="currentTrack" />
+    <Navbar @changeTab="changeTab" @search="search" />
+    <div class="content">
+      <SignUpForm @submit="submit" v-if="currentTab === 'SignUpForm'" />
+      <LoginForm v-if="currentTab === 'LoginForm'" />
+      <Home @changeTab="changeTab" v-if="currentTab === 'Home'" />
+      <About v-if="currentTab === 'About'" />
+      <Playlists v-if="currentTab === 'Playlists'" />
+      <Sidenav @changeTab="changeTab" />
+      <Songs :playlistName="playlistName" v-if="currentTab === 'Songs'" />
+      <Player :currentTrack="currentTrack" />
+      <SearchSongs :searchQuary="searchQuary"  v-if="currentTab==='SearchSongs'"/>
+    </div>
   </div>
 </template>
 
@@ -19,8 +23,9 @@ import Home from './views/Home.vue';
 import About from './views/About.vue';
 import SignUpForm from './views/SignUpForm.vue';
 import Player from './components/Player.vue';
-import Spotify from './components/Spotify.vue';
-
+import LoginForm from './views/LoginForm.vue';
+import Songs from './views/Songs.vue';
+import SearchSongs from './views/SearchSongs.vue';
 export default {
   components: {
     Navbar,
@@ -30,11 +35,13 @@ export default {
     About,
     SignUpForm,
     Player,
-    Spotify,
+    LoginForm,
+    Songs,
+    SearchSongs,
   },
   data() {
     return {
-      currentTab: "",
+      currentTab: 'Home',
       formValue: {
         email: '',
         confirmEmail: '',
@@ -43,48 +50,36 @@ export default {
         dob: '',
         gender: '',
       },
-      submitted: true,
-      currentTrack: null
+      submitted: false,
+      currentTrack: null,
+      playlistName: '',
+      searchQuary:'',
     };
   },
   methods: {
-    changeTab(tab) {
-      this.currentTab = tab.__name || tab.name;
-    },
-    PlaylistTab(playTab) {
-      this.changeTab(playTab);
+    changeTab(tabName) {
+      if(tabName === "Top 50" || tabName === "Favorites"){
+        this.playlistName = tabName;
+        this.currentTab = 'Songs';
+      } else {
+        this.currentTab = tabName;
+      }
     },
     submit(formValue) {
       console.log('Form:', formValue);
       this.submitted = true;
-      console.log(this.submitted);
       this.changeTab('Home');
     },
-    changeTabs(signIn) {
-      console.log(signIn);
-      this.changeTab(signIn);
-    },
-    handleSearch(query) {
-      this.$refs.spotify.searchSongs(query);
-    },
-    updateCurrentPlaying(track) {
-      this.currentTrack = track;
+    search(searchData){
+      this.searchQuary=searchData;
+      this.changeTab('SearchSongs')
     }
-  }
+  },
 };
 </script>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+<style>
+.content {
+  padding-top: 60px; 
 }
 </style>

@@ -2,62 +2,92 @@
   <nav class="navbar">
     <div class="navbar-brand">
       <img src="https://cdn-icons-png.flaticon.com/128/3669/3669986.png" alt="Logo" class="logo" />
-      <span class="brand-name">{{ msg }}</span>
+      <span >MySongApp</span>
     </div>
     <div class="navbar-right">
-      <input v-model="searchQuery" @keyup.enter="emitSearchQuery" class="search-bar" placeholder="Search for a song" />
+      <input 
+        v-model="searchQuery" 
+        @keyup.enter="search" 
+        class="search-bar" 
+        placeholder="Search for a song" 
+        ref="searchBar"
+      />
       <ul class="navbar-menu">
-        <li class="nav-item">
-          <a href="#" class="nav-link" @click="handleUserAction">
-            <span v-if="user.name">Welcome, {{ user.name }}</span>
-            <span v-else>Sign Up</span>
+        <div class="nav-item">
+          <a href="#"  >
+            <span  class="nav-link" @click="handleUserAction(tab)" v-if="user.name">Welcome  {{ user.name }}</span>
+            <a class="space" v-else>
+              <li class="nav-link" @click="handleUserAction(tab)" v-for="(tab, index) in tabs" :key="index">{{ tab.text }}</li>
+            </a>
           </a>
-        </li>
+        </div>
       </ul>
     </div>
+   
   </nav>
 </template>
 
 <script>
+import LoginForm from '../views/LoginForm.vue';
+import { ref, onMounted } from 'vue';
+
 export default {
   name: 'Navbar',
-  props: {
-    msg: String,
+  components: {
+    LoginForm, 
+
   },
-  data() {
-    return {
-      searchQuery: '',
-      user: {}, // Add a user data property
-    };
-  },
-  methods: {
-    emitSearchQuery() {
-      this.$emit('search', this.searchQuery);
-    },
-    handleUserAction() {
-      if (this.user.name) {
-        this.logout();
-      } else {
-        this.$emit('changeTabs', { name: 'SignUpForm', text: 'Sign Up' });
+  data(){
+      return{
+        tabs: [
+          { name: "SignUpForm", text: "Sign Up"},
+          { name: "LoginForm", text: "Login" },
+        ],
       }
     },
-    logout() {
-      localStorage.removeItem('user');
-      this.user = {};
-      this.$emit('user-logged-out');
-    },
-    updateUser(userData) {
-      this.user = userData;
+  methods:{
+    search(){
+      this.$emit('search',this.searchQuery);
     }
   },
-  created() {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      this.user = JSON.parse(userData);
-    }
-  }
+  setup(props, { emit }) {
+    const searchQuery = ref('');
+    const user = ref({});
+    const handleUserAction = (tab) => {
+      if (user.value.name) {
+        logout();
+      } else {
+        emit('changeTab',tab.name);
+      }
+    };
+    const handleLoginSuccess = (userData) => {
+      user.value = userData;
+      localStorage.setItem('user', JSON.stringify(userData));
+    };
+
+    const logout = () => {
+      localStorage.removeItem('user');
+      user.value = {};
+      emit('user-logged-out');
+    };
+
+    onMounted(() => {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        user.value = JSON.parse(userData);
+      }
+    });
+    return {
+      user,
+      searchQuery,
+      handleUserAction,
+      handleLoginSuccess,
+      logout,
+    };
+  },
 };
 </script>
+
 
 <style scoped>
 .navbar {
@@ -68,40 +98,36 @@ export default {
   z-index: 2;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   color: white;
   background-color: #040404;
   padding: 10px 20px;
-  box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+  box-sizing: border-box;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  margin-left: 0; /* Remove left padding to align with the wall */
+  margin-left: 0;
+  font-size: 1.2rem;
 }
-
 .logo {
   width: 40px;
   height: 40px;
   margin-right: 10px;
 }
 
-.brand-name {
-  font-size: 1.2rem;
-}
-
 .navbar-right {
   display: flex;
   align-items: center;
-  margin-right: 20px; /* Add margin to the right side */
+  margin-right: 20px;
+  position: relative;
 }
 
 .search-bar {
   padding: 10px;
   border-radius: 4px;
   border: 1px solid #ddd;
-  width: 300px; /* Adjust width as needed */
+  width: 300px;
   margin-right: 20px;
 }
 
@@ -119,25 +145,16 @@ export default {
 .nav-link {
   color: white;
   text-decoration: none;
-  transition: color 0.3s ease, background-color 0.3s ease;
+  align-items: center;
 }
 
 .nav-link:hover {
-  text-decoration: underline;
   color: #1db954;
   background-color: #1a1a1a;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
 
-.user-name {
-  margin-left: 20px;
-  color: #1db954;
-  font-size: 1rem;
-  cursor: pointer; /* Add cursor pointer to indicate clickable */
 }
-
-.search-results {
-  margin-top: 60px;
+.space {
+  display: flex;
+    gap: 10px;
 }
 </style>

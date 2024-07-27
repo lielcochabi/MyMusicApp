@@ -1,59 +1,86 @@
 <template>
-    <div class="Playlists">
-      <div class="song-card" v-for="(song, index) in songs" :key="index">
-        <img :src="song.imageUrl" :alt="song.name" class="song-image">
-        <div class="song-name">{{ song.name }}</div>
-      </div>
+  <div class="Playlists">
+    <h1 class="title">Playlists:</h1>
+    <div class="playlist" v-for="playlist in playlists" :key="playlist._id">
+      <h2>{{ playlist.name }}</h2>
     </div>
-  </template>
-  
-  <script setup>
-  const songs = [
-    { name: 'Song 1', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 2', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 3', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 4', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 5', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 6', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 7', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 8', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 9', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 10', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 11', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 12', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 13', imageUrl: 'https://via.placeholder.com/150' },
-    { name: 'Song 14', imageUrl: 'https://via.placeholder.com/150' }
-  ];
+    <input type="text" v-model="newPlaylistName" placeholder="Enter playlist name" />
+    <button @click="createPlaylist">Add Playlist</button>
+  </div>
+</template>
 
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      name: "Playlists",
+      playlists:[],
+      newPlaylistName: ''
+    };
+  },
+  methods: {
+    async fetchPlaylists() {
+      try {
+        const userId = JSON.parse(localStorage.getItem('user'))._id;
+        console.log('Fetching playlists for user:', userId);
+        const response = await axios.get(`http://localhost:3000/api/user/${userId}/playlists`);
+        console.log('Fetched playlists:', response.data);
+        this.playlists = response.data;
+      } catch (error) {
+        console.error('Error fetching playlists:', error);
+      }
+    },
+    async createPlaylist() {
+      try {
+        const userId = JSON.parse(localStorage.getItem('user'))._id;
+        if (this.newPlaylistName === '') {
+          alert("Please enter a playlist name");
+          return;
+        }
+        const playlist = {
+          name: this.newPlaylistName,
+          songs: []
+        };
+        const response = await axios.post(`http://localhost:3000/api/user/${userId}/playlists`, playlist);
+        console.log('Created playlist:', response.data);
+        this.playlists.push(response.data);
+        console.log("returned:",this.playlists);
+        this.newPlaylistName = '';
+      } catch (error) {
+        console.error('Error creating playlist:', error);
+      }
+    }
+  },
+  mounted() {
+    this.fetchPlaylists();
+  },
+};
+</script>
 
-
-  </script>
-  
-  <style scoped>
-  .Playlists {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
-    width: 60vw;
-  }
-  
-  .song-card {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
+<style scoped>
+.Playlists {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
+  width: 60vw;
+  color: #1db954;
+}
+.playlist {
+    display: flex;
+    align-items: center;
+    background-color: #2d2d2d; 
+    padding: 20px;
+    height: 10px;
+    border-radius: 10px; 
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   }
-  
-  .song-image {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  
-  .song-name {
-    margin-top: 10px;
-    font-weight: bold;
-    text-align: center;
-  }
-  </style>
-  
+.playlist {
+  margin-bottom: 40px;
+}
+.title {
+  position: absolute;
+  top: 10%;
+  font-weight: bold;
+}
+</style>

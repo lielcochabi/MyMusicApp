@@ -3,12 +3,12 @@
     <main>
       <section class="hero">
         <h2>Discover New Music</h2>
-        <button class="browse-button" @click="goToLibrary">Browse Playlists</button>
+        <button class="browse-button" @click="goToLibrary('Playlists')">Browse Playlists</button>
       </section>
       <section class="featured-albums">
         <h3>Featured Albums</h3>
         <div class="album-grid">
-          <div class="album" v-for="album in albums" :key="album.id">
+          <div @click="goToLibrary(album.name)" class="album" v-for="album in albums" :key="album.id">
             <img :src="album.cover" :alt="album.name" />
             <p>{{ album.name }}</p>
           </div>
@@ -30,13 +30,13 @@ export default {
     return {
       albums: [
         { id: 1, name: "Top 50", cover: "https://www.kolibrimusic.com/wp-content/uploads/2017/10/spotify-top-50-global.jpg" },
-        { id: 2, name: "Liked Songs", cover: "https://misc.scdn.co/liked-songs/liked-songs-300.png" },
+        { id: 2, name: "Favorites", cover: "https://misc.scdn.co/liked-songs/liked-songs-300.png" },
       ],
     };
   },
   methods: {
-    goToLibrary() {
-      this.$emit('changeTab', Playlists);
+    goToLibrary(name) {
+        this.$emit('changeTab',name);
     },
   },
 };
