@@ -105,7 +105,7 @@ export default {
         }
       }
     },
-    async addToPlaylist({playlist, song} ){
+    async addToPlaylist(playlist, song ){
       const userId = JSON.parse(localStorage.getItem('user'))._id;
       try {
         await axios.post(`http://localhost:3000/api/user/${userId}/playlists/${playlist.name}/songs`, { song });

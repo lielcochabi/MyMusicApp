@@ -1,9 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const axios = require('axios');
-const querystring = require('querystring');
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import axios from 'axios';
+import querystring from 'querystring';
+
 
 // MongoDB connection URI
 const uriUser =mongoose.createConnection("mongodb+srv://liel:URH3JsFd39aeS9d@users.bn7mipr.mongodb.net/MyMusicApp?retryWrites=true&w=majority");
