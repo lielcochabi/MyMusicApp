@@ -59,7 +59,6 @@ export default {
       if (this.isSubmitting) return; // Prevent further submissions
       this.isSubmitting = true; // Set flag to true at the start of the submission
       
-      console.log('Form submission started'); // Log start of form submission
       if (this.form.email !== this.form.confirmEmail) {
         alert("Emails do not match");
         this.isSubmitting = false; // Reset the flag
@@ -69,7 +68,6 @@ export default {
       try {
         const response = await axios.post('http://localhost:3000/api/signup', this.form);
         alert('Form submitted successfully');
-        console.log('Form submitted successfully', response.data);
 
         // Save user information to local storage
         localStorage.setItem('user', JSON.stringify(response.data));

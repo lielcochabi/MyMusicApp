@@ -1,5 +1,7 @@
 <template>
   <div class="home-page">
+    <button @click="loginToSpotify">{{ buttonText }}</button>
+
     <main>
       <section class="hero">
         <h2>Discover New Music</h2>
@@ -22,7 +24,7 @@
 </template>
 
 <script>
-import Playlists from './Playlists.vue';
+import auth from '../auth';
 
 export default {
   name: "Home",
@@ -32,12 +34,38 @@ export default {
         { id: 1, name: "Top 50", cover: "https://www.kolibrimusic.com/wp-content/uploads/2017/10/spotify-top-50-global.jpg" },
         { id: 2, name: "Favorites", cover: "https://misc.scdn.co/liked-songs/liked-songs-300.png" },
       ],
+      accessToken: null,
+      buttonText: "Connect to Spotify"
     };
   },
   methods: {
-    goToLibrary(name) {
-        this.$emit('changeTab',name);
+     goToLibrary(name) {
+      this.$emit('changeTab',name);
     },
+    async loginToSpotify() {
+      try {
+        const token = await auth.getToken();
+        this.accessToken = token;
+        localStorage.setItem('spotify_access_token', token);
+        this.checkIfConnected();
+      } catch (error) {
+        console.error('Error getting Spotify token:', error);
+      }
+    },
+    checkIfConnected() {
+      if (this.accessToken) {
+        this.buttonText = "Connected to spotify";
+      } else {
+        this.buttonText = "Connect to Spotify";
+      }
+    }
+  },
+  async mounted() {
+    const storedToken = localStorage.getItem('spotify_access_token');
+    if (storedToken) {
+      this.accessToken = storedToken;
+      this.checkIfConnected();
+    }
   },
 };
 </script>

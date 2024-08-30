@@ -88,7 +88,6 @@ export default {
           },
         });
         this.songs = response.data.tracks.items;
-        console.log(this.songs);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           accessToken = await this.getAccessToken();
@@ -140,7 +139,7 @@ export default {
       this.fetchPlaylists();
     }
     else{
-      console.log("search first");
+      alert("search first");
     }
   },
 };

@@ -66,7 +66,6 @@ export default {
       }
     },
     submit(formValue) {
-      console.log('Form:', formValue);
       this.submitted = true;
       this.changeTab('Home');
     },

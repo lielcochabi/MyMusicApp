@@ -1,38 +1,37 @@
-//this page giving the option to connect to your spotify account through this website
-//this website does not currently use this but keeping it as an option
+// src/auth.js inside client folder
 
+let clientId;
+let clientSecret;
 
-//auth.js accessing the spotify db
-// spotify client id 
-const CLIENT_ID = '63df0d7b18364e369c2b704ebde82427'; 
+// Fetch the configuration from the JSON file
+const loadConfig = async () => {
+  const response = await fetch("/path-to-your-env-file/env.json");
+  const config = await response.json();
+  clientId = config.SPOTIFY_CLIENT_ID;
+  clientSecret = config.SPOTIFY_CLIENT_SECRET;
 
-//keeping for future options
-const REDIRECT_URI = 'http://localhost:5173/'; // the url after excessing the db spotify will redirect to (incase of connecting to spotify account)
+  if (!clientId || !clientSecret) {
+    throw new Error(
+      "Spotify Client ID and Secret are not defined. Please check your env.json file."
+    );
+  }
+};
 
-// Function to generate the Spotify authorization URL
-export function getAuthUrl() {
-  // Scopes specify the permissions that the application is requesting
-  const scopes = [
-    'user-read-private',     // Permission to read user's private information
-    'user-read-email',       // Permission to read user's email address
-    'playlist-read-private', // Permission to read user's private playlists
-    'user-library-read',     // Permission to read user's library
-  ];
+const getToken = async () => {
+  await loadConfig(); // Ensure the config is loaded before proceeding
+  const result = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: "Basic " + btoa(clientId + ":" + clientSecret),
+    },
+    body: "grant_type=client_credentials",
+  });
 
-  // Construct and return the authorization URL with the necessary parameters
-  return (
-    `https://accounts.spotify.com/authorize?response_type=token&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scopes.join(' '))}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
-  );
-}
+  const data = await result.json();
+  return data.access_token;
+};
 
-// Function to extract the access token from the URL hash
-export function getAccessToken() {
-  // Get the URL hash (part after #) and split it into key-value pairs
-  const hash = window.location.hash.substring(1).split('&').reduce((acc, cur) => {
-    const [key, value] = cur.split('='); // Split each pair into key and value
-    acc[key] = value; // Add the key-value pair to the accumulator object
-    return acc; // Return the accumulator for the next iteration
-  }, {});
-
-  return hash.access_token; // Return the access token from the hash
-}
+export default {
+  getToken,
+};

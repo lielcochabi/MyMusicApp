@@ -23,9 +23,7 @@ export default {
     async fetchPlaylists() {
       try {
         const userId = JSON.parse(localStorage.getItem('user'))._id;
-        console.log('Fetching playlists for user:', userId);
         const response = await axios.get(`http://localhost:3000/api/user/${userId}/playlists`);
-        console.log('Fetched playlists:', response.data);
         this.playlists = response.data;
       } catch (error) {
         console.error('Error fetching playlists:', error);
@@ -43,9 +41,7 @@ export default {
           songs: []
         };
         const response = await axios.post(`http://localhost:3000/api/user/${userId}/playlists`, playlist);
-        console.log('Created playlist:', response.data);
         this.playlists.push(response.data);
-        console.log("returned:",this.playlists);
         this.newPlaylistName = '';
       } catch (error) {
         console.error('Error creating playlist:', error);
