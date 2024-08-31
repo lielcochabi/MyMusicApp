@@ -7,16 +7,16 @@ import querystring from "querystring";
 import fs from "fs";
 import path from "path";
 
-// Get the directory of the current file
+
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load the env.json file
+
 const envFilePath = path.resolve(__dirname, "../env.json");
 const envConfig = JSON.parse(fs.readFileSync(envFilePath, "utf-8"));
 
-// Extract the environment variables from env.json
+
 const {
   MONGODB_URI_USER,
   MONGODB_URI_PLAYLIST,
@@ -33,7 +33,7 @@ if (
   console.error(
     "Required environment variables are missing. Please check your env.json file."
   );
-  process.exit(1); // Exit the application if any environment variable is missing
+  process.exit(1); 
 }
 
 const uriUser = mongoose.createConnection(MONGODB_URI_USER);
@@ -41,7 +41,7 @@ const uriPlaylist = mongoose.createConnection(MONGODB_URI_PLAYLIST);
 
 const app = express();
 
-// Middleware
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -104,7 +104,6 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// User login
 app.post("/api/login", async (req, res) => {
   const { name, password } = req.body;
 
@@ -121,7 +120,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Get user playlists
 app.get("/api/user/:userId/playlists", async (req, res) => {
   const { userId } = req.params;
 
@@ -139,7 +137,6 @@ app.get("/api/user/:userId/playlists", async (req, res) => {
   }
 });
 
-// Add song to a playlist
 app.post(
   "/api/user/:userId/playlists/:playlistName/songs",
   async (req, res) => {
@@ -201,7 +198,6 @@ app.post("/api/user/:userId/playlists", async (req, res) => {
   }
 });
 
-// Access token from Spotify
 app.post("/api/token", async (req, res) => {
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const credentials = Buffer.from(
@@ -230,7 +226,6 @@ app.post("/api/token", async (req, res) => {
   }
 });
 
-// Start the server
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

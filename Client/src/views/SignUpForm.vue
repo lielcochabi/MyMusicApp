@@ -51,34 +51,30 @@ export default {
         dob: '',
         gender: '',
       },
-      isSubmitting: false, // Add a flag to prevent multiple submissions
+      isSubmitting: false, 
     };
   },
   methods: {
     async submitForm() {
-      if (this.isSubmitting) return; // Prevent further submissions
-      this.isSubmitting = true; // Set flag to true at the start of the submission
+      if (this.isSubmitting) return; 
+      this.isSubmitting = true; 
       
       if (this.form.email !== this.form.confirmEmail) {
         alert("Emails do not match");
-        this.isSubmitting = false; // Reset the flag
+        this.isSubmitting = false; 
         return;
       }
 
       try {
         const response = await axios.post('http://localhost:3000/api/signup', this.form);
         alert('Form submitted successfully');
-
-        // Save user information to local storage
         localStorage.setItem('user', JSON.stringify(response.data));
-
-        // Redirect to home page
-        window.location.href = '/'; // Simplified navigation to home
+        window.location.href = '/';
       } catch (error) {
         console.error('Error submitting form', error);
         alert('Error submitting form');
       } finally {
-        this.isSubmitting = false; // Reset the flag
+        this.isSubmitting = false; 
       }
     },
   },

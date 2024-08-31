@@ -1,9 +1,7 @@
-// src/auth.js inside client folder
 
 let clientId;
 let clientSecret;
 
-// Fetch the configuration from the JSON file
 const loadConfig = async () => {
   const response = await fetch("/path-to-your-env-file/env.json");
   const config = await response.json();
@@ -18,7 +16,7 @@ const loadConfig = async () => {
 };
 
 const getToken = async () => {
-  await loadConfig(); // Ensure the config is loaded before proceeding
+  await loadConfig(); 
   const result = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {

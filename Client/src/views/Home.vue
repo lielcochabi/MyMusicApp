@@ -100,9 +100,9 @@ main {
   background-color: #1db954;
   color: white;
   border: none;
-  padding: 15px 30px; /* Increased padding for larger button */
+  padding: 15px 30px; 
   cursor: pointer;
-  font-size: 1.2em; /* Increased font size */
+  font-size: 1.2em; 
   border-radius: 20px;
 }
 
