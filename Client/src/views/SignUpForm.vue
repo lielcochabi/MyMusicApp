@@ -92,7 +92,7 @@ export default {
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: #191414; /* Spotify dark background */
+  background-color: #191414; 
   color: white;
   font-family: Arial, sans-serif;
 }
@@ -109,7 +109,7 @@ export default {
 
 .signup-container h1 {
   margin-bottom: 20px;
-  color: #1db954; /* Spotify green */
+  color: #1db954;
 }
 
 .input-group {
@@ -135,7 +135,7 @@ export default {
 .input-group input:focus,
 .input-group select:focus {
   outline: none;
-  border: 1px solid #1db954; /* Spotify green border on focus */
+  border: 1px solid #1db954; 
 }
 
 .signup-button {
@@ -143,13 +143,13 @@ export default {
   padding: 10px;
   border: none;
   border-radius: 4px;
-  background-color: #1db954; /* Spotify green */
+  background-color: #1db954; 
   color: white;
   font-size: 16px;
   cursor: pointer;
 }
 
 .signup-button:hover {
-  background-color: #1ed760; /* Lighter green on hover */
+  background-color: #1ed760; 
 }
 </style>

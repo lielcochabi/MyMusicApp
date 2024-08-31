@@ -40,7 +40,7 @@
   <style scoped>
   .about-page {
     color: white;
-    background-color: #191414; /* Dark background similar to Spotify */
+    background-color: #191414; 
     font-family: Arial, sans-serif;
     padding: 20px;
     min-height: 100vh;
@@ -54,7 +54,7 @@
   }
   
   h1, h2 {
-    color: #1db954; /* Spotify green color for headings */
+    color: #1db954; 
   }
   
   p, li {
@@ -62,12 +62,12 @@
   }
   
   ul {
-    list-style-type: none; /* Remove bullets from unordered list */
-    padding-left: 0; /* Remove default padding */
+    list-style-type: none; 
+    padding-left: 0; 
   }
   
   a {
-    color: #1db954; /* Spotify green color for links */
+    color: #1db954; 
     text-decoration: none;
   }
   

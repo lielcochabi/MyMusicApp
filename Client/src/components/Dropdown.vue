@@ -85,7 +85,7 @@
   }
   
   .dropdown-item:hover {
-    background-color: #1db954; /* Spotify green color */
+    background-color: #1db954; 
   }
   
   .song-image {

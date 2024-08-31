@@ -59,13 +59,13 @@ export default {
 .track-info {
   display: flex;
   align-items: center;
-  margin-right: 20px; /* Add spacing between track info and controls */
+  margin-right: 20px; 
 }
 
 .track-info img {
   height: 50px;
   width: 50px;
-  margin-right: 20px; /* Add spacing between image and text */
+  margin-right: 20px;
 }
 
 .track-details {
@@ -80,11 +80,11 @@ export default {
 
 .controls {
   display: flex;
-  gap: 20px; /* Increased spacing between buttons */
+  gap: 20px; 
 }
 
 .controls button {
-  background: #66bb6a; /* Light green */
+  background: #66bb6a; 
   border: none;
   color: white;
   font-size: 16px;
@@ -94,10 +94,10 @@ export default {
 }
 
 .controls button:hover {
-  background: #388e3c; /* Darker green on hover */
+  background: #388e3c; 
 }
 
 .controls button.playing {
-  background: #ef5350; /* Red for pause button when playing */
+  background: #ef5350; 
 }
 </style>

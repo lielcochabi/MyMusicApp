@@ -78,24 +78,24 @@
   .song-details {
     display: flex;
     flex-direction: column;
-    margin-left: 20px; /* Increased margin */
+    margin-left: 20px; 
     flex-grow: 1;
   }
   
   .song-name {
     font-weight: bold;
-    color: #ffffff; /* White color for text */
+    color: #ffffff; 
   }
   
   .song-artist {
-    color: #b3b3b3; /* Light gray color for text */
-    font-size: 1em; /* Increased font size */
-    margin-left: auto; /* Push to the far right */
-    white-space: nowrap; /* Prevent text from wrapping */
+    color: #b3b3b3; 
+    font-size: 1em; 
+    margin-left: auto; 
+    white-space: nowrap; 
   }
   
   .song-card:hover {
-    background-color: #3a3a3a; /* Darker gray on hover */
+    background-color: #3a3a3a; 
   }
 
   .playlist{
