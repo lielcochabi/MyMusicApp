@@ -6,7 +6,7 @@
       <LoginForm v-if="currentTab === 'LoginForm'" />
       <Home @changeTab="changeTab" v-if="currentTab === 'Home'" />
       <About v-if="currentTab === 'About'" />
-      <Playlists v-if="currentTab === 'Playlists'" />
+      <Playlists @changeTab="changeTab" v-if="currentTab === 'Playlists'" />
       <Sidenav @changeTab="changeTab" />
       <Songs :playlistName="playlistName" v-if="currentTab === 'Songs'" />
       <Player :currentTrack="currentTrack" />
@@ -58,11 +58,12 @@ export default {
   },
   methods: {
     changeTab(tabName) {
-      if(tabName === "Top 50" || tabName === "Favorites"){
-        this.playlistName = tabName;
-        this.currentTab = 'Songs';
-      } else {
-        this.currentTab = tabName;
+      const validTabs = ['Home', 'SignUpForm', 'LoginForm', 'About', 'Playlists', 'Songs', 'SearchSongs'];
+      if(validTabs.includes(tabName)){
+        this.currentTab=tabName;
+      }else{
+        this.playlistName=tabName;
+        this.currentTab='Songs'
       }
     },
     submit(formValue) {
