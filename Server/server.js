@@ -178,12 +178,6 @@ app.post("/api/user/:userId/playlists", async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
-    const playlistTest = user.playlists.find(
-      (playlist) => playlist.name === name
-    );
-    if (playlistTest) {
-      return res.status(404).send({ message: "Playlist already exist" });
-    }
     user.playlists.push({
       name: name,
       songs: [],

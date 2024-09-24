@@ -6,6 +6,7 @@
     </div>
     <div class="navbar-right">
       <input 
+        id="search"
         v-model="searchQuery" 
         @keyup.enter="search" 
         class="search-bar" 
@@ -47,11 +48,14 @@ export default {
     },
   methods:{
     search(){
-      this.$emit('search',this.searchQuery);
+      this.newSearch=this.searchQuery
+      this.searchQuery=''
+      this.$emit('search',this.newSearch);
     }
   },
-  setup(props, { emit }) {
+  setup({ emit }) {
     const searchQuery = ref('');
+    const newSearch=ref('');
     const user = ref({});
     const handleUserAction = (tab) => {
       if (user.value.name) {
@@ -80,6 +84,7 @@ export default {
     return {
       user,
       searchQuery,
+      newSearch,
       handleUserAction,
       handleLoginSuccess,
       logout,

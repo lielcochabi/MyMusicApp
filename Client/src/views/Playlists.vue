@@ -33,6 +33,9 @@ export default {
       }
     },
     async createPlaylist() {
+      if(this.checkIfExist()){
+        return;
+      }
       try {
         const userId = JSON.parse(localStorage.getItem('user'))._id;
         if (!this.newPlaylistName.trim()) {
@@ -49,6 +52,13 @@ export default {
       } catch (error) {
         console.error('Error creating playlist:', error);
       }
+    },
+    checkIfExist(){
+      const exist=this.playlists.some(playlist=>playlist.name===this.newPlaylistName)
+      if(exist){     
+        alert("playlist already exists");
+      }
+      return exist;
     },
     goToPlaylist(playlistName) {
       this.$emit('changeTab', playlistName);

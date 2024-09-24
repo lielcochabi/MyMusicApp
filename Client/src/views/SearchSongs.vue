@@ -14,6 +14,7 @@
           <tr 
             v-for="song in songs" :key="song.id" 
             :class="{ 'glow': selectedSong === song}"
+            @dblclick="playSong(song)"
             @click="selectSong(song)">
             <td><img :src="song.album.images[0]?.url || 'https://via.placeholder.com/50'" alt="Song Image" class="song-image"></td>
             <td>{{ song.name }}</td>
@@ -57,6 +58,13 @@ export default {
       selectedPlaylist:null,
     }
   },  
+  watch:{
+    searchQuary(newQuery){
+      if(newQuery){
+        this.searchSongs(newQuery)
+      }
+    }
+  },
   methods:{
     async fetchPlaylists() {
       try {
@@ -121,6 +129,9 @@ export default {
       }
 
     },
+    playSong(song){
+      this.$emit('toPlayer',song);
+    },
     selectPlaylist(playlist){
       if(this.selectedPlaylist!=null &&this.selectedPlaylist===playlist){
         this.addToPlaylist(playlist,this.selectedSong);
@@ -142,6 +153,7 @@ export default {
       alert("search first");
     }
   },
+
 };
 </script>
 
