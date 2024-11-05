@@ -9,9 +9,14 @@
       <Playlists @changeTab="changeTab" v-if="currentTab === 'Playlists'" />
       <Sidenav @changeTab="changeTab" />
       <Songs :playlistName="playlistName" v-if="currentTab === 'Songs'" />
-      <Player :currentTrack="currentTrack" />
-      <SearchSongs :searchQuary="searchQuary"  v-if="currentTab==='SearchSongs'"/>
+      <SearchSongs @playSong="playSong" :searchQuary="searchQuary" v-if="currentTab==='SearchSongs'"/>
     </div>
+    <Player 
+      :currentTrack="currentTrack" 
+      :accessToken="accessToken" 
+      :deviceId="deviceId" 
+      @setDeviceId="setDeviceId"  
+    />
   </div>
 </template>
 
@@ -26,6 +31,8 @@ import Player from './components/Player.vue';
 import LoginForm from './views/LoginForm.vue';
 import Songs from './views/Songs.vue';
 import SearchSongs from './views/SearchSongs.vue';
+import auth from './auth.js';  
+
 export default {
   components: {
     Navbar,
@@ -41,7 +48,7 @@ export default {
   },
   data() {
     return {
-      currentTab: 'Home',
+      currentTab: 'Home', 
       formValue: {
         email: '',
         confirmEmail: '',
@@ -51,30 +58,59 @@ export default {
         gender: '',
       },
       submitted: false,
-      currentTrack: null,
-      playlistName: '',
-      searchQuary:'',
+      currentTrack: null,  
+      playlistName: '',  
+      searchQuary: '',  
+      accessToken: null,  
+      deviceId: null,     
     };
   },
   methods: {
     changeTab(tabName) {
       const validTabs = ['Home', 'SignUpForm', 'LoginForm', 'About', 'Playlists', 'Songs', 'SearchSongs'];
-      if(validTabs.includes(tabName)){
-        this.currentTab=tabName;
-      }else{
-        this.playlistName=tabName;
-        this.currentTab='Songs'
+      if (validTabs.includes(tabName)) {
+        this.currentTab = tabName;
+      } else {
+        this.playlistName = tabName;
+        this.currentTab = 'Songs';
       }
     },
     submit(formValue) {
       this.submitted = true;
       this.changeTab('Home');
     },
-    search(searchData){
-      this.searchQuary=searchData;
-      this.changeTab('SearchSongs')
+    search(searchData) {
+      this.searchQuary = searchData;
+      this.changeTab('SearchSongs');
+    },
+    playSong(song) {
+      this.currentTrack = song;
+    },
+    async getAccessToken() {
+      const storedToken = localStorage.getItem('spotify_access_token');
+      if (storedToken) {
+        this.accessToken = storedToken;
+      } else {
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+          try {
+            const token = await auth.getToken(code);
+            this.accessToken = token;
+          } catch (error) {
+            console.error('Error retrieving access token:', error);
+          }
+        }
+      }
+    },
+    setDeviceId(deviceId) {
+      this.deviceId = deviceId;  
     }
   },
+  async mounted() {
+    await this.getAccessToken();  
+  }
 };
 </script>
 

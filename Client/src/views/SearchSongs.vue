@@ -130,7 +130,7 @@ export default {
 
     },
     playSong(song){
-      this.$emit('toPlayer',song);
+      this.$emit('playSong',song);
     },
     selectPlaylist(playlist){
       if(this.selectedPlaylist!=null &&this.selectedPlaylist===playlist){

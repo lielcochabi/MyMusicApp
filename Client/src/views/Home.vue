@@ -1,7 +1,7 @@
 <template>
   <div class="home-page">
-    <button @click="loginToSpotify">{{ buttonText }}</button>
-
+    <button v-if="!accessToken" @click="loginToSpotify">{{ buttonText }}</button>
+    <button v-if="accessToken" @click="logout">Disconnect from Spotify</button>
     <main>
       <section class="hero">
         <h2>Discover New Music</h2>
@@ -39,22 +39,40 @@ export default {
     };
   },
   methods: {
-     goToLibrary(name) {
-      this.$emit('changeTab',name);
+    goToLibrary(name) {
+      this.$emit('changeTab', name);
     },
-    async loginToSpotify() {
-      try {
-        const token = await auth.getToken();
-        this.accessToken = token;
-        localStorage.setItem('spotify_access_token', token);
-        this.checkIfConnected();
-      } catch (error) {
-        console.error('Error getting Spotify token:', error);
+    loginToSpotify() {
+      window.location.href = auth.getAuthUrl();
+    },
+    logout() {
+      localStorage.removeItem('spotify_access_token');
+      this.accessToken = null;
+      this.buttonText = "Connect to Spotify";
+    },
+    async handleRedirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        try {
+          const token = await auth.getToken(code);
+          this.accessToken = token;
+          localStorage.setItem('spotify_access_token', token);
+          this.clearUrlParams(); 
+          this.checkIfConnected();
+        } catch (error) {
+          console.error('Error exchanging Spotify code for token:', error);
+        }
       }
+    },
+    clearUrlParams() {
+      const url = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, url);
     },
     checkIfConnected() {
       if (this.accessToken) {
-        this.buttonText = "Connected to spotify";
+        this.buttonText = "Connected to Spotify";
       } else {
         this.buttonText = "Connect to Spotify";
       }
@@ -65,11 +83,12 @@ export default {
     if (storedToken) {
       this.accessToken = storedToken;
       this.checkIfConnected();
+    } else {
+      await this.handleRedirect();
     }
   },
 };
 </script>
-
 <style scoped>
 .home-page {
   color: white;

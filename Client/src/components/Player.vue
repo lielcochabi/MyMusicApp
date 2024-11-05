@@ -19,25 +19,130 @@
 export default {
   name: 'Player',
   props: {
-    currentTrack: Object
+    currentTrack: Object,
+    accessToken: String,
+    deviceId: String,
   },
   data() {
     return {
-      isPlaying: false
+      isPlaying: false,
+      player: null,
+      ready: false,
     };
   },
+  watch: {
+    currentTrack(newTrack) {
+      if (newTrack && this.ready) {
+        this.playTrack(newTrack.uri);
+      }
+    },
+  },
   methods: {
+    initializePlayer() {
+    
+      this.player = new Spotify.Player({
+        name: 'MyMusicApp',
+        getOAuthToken: (cb) => { cb(this.accessToken); }, 
+        volume: 0.5,
+      });
+
+      
+      this.player.connect();
+
+      
+      this.player.addListener('ready', ({ device_id }) => {
+        console.log('Player is ready with Device ID:', device_id);
+        this.$emit('setDeviceId', device_id); 
+        this.ready = true; 
+      });
+
+   
+      this.player.addListener('player_state_changed', (state) => {
+        if (state) {
+          this.isPlaying = !state.paused;
+        }
+      });
+
+      
+      this.player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      this.player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      this.player.addListener('account_error', ({ message }) => { console.error(message); });
+      this.player.addListener('playback_error', ({ message }) => { console.error(message); });
+    },
+
+    playTrack(spotifyUri) {
+     
+      if (!this.deviceId || !this.accessToken) {
+        console.error('No device ID or access token available for playback');
+        return;
+      }
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uris: [spotifyUri] }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log('Playback started');
+          } else {
+            console.error('Error starting playback:', response.status, response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error('Error playing song:', error);
+        });
+    },
+
     playPauseTrack() {
-      this.isPlaying = !this.isPlaying;
+      if (this.isPlaying) {
+        this.player.pause().then(() => {
+          console.log('Playback paused');
+          this.isPlaying = false;
+        }).catch((err) => {
+          console.error('Error pausing playback:', err);
+        });
+      } else {
+        this.player.resume().then(() => {
+          console.log('Playback resumed');
+          this.isPlaying = true;
+        }).catch((err) => {
+          console.error('Error resuming playback:', err);
+        });
+      }
     },
+
     prevTrack() {
-      console.log('Previous track');
+      this.player.previousTrack().then(() => {
+        console.log('Skipped to previous track');
+      }).catch((err) => {
+        console.error('Error skipping to previous track:', err);
+      });
     },
+
     nextTrack() {
-      console.log('Next track');
+      this.player.nextTrack().then(() => {
+        console.log('Skipped to next track');
+      }).catch((err) => {
+        console.error('Error skipping to next track:', err);
+      });
+    },
+  },
+
+  mounted() {
+   
+    if (window.Spotify) {
+      this.initializePlayer();
+    } else {
+      
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        this.initializePlayer();
+      };
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
