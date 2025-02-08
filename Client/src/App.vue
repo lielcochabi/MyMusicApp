@@ -8,7 +8,7 @@
       <About v-if="currentTab === 'About'" />
       <Playlists @changeTab="changeTab" v-if="currentTab === 'Playlists'" />
       <Sidenav @changeTab="changeTab" />
-      <Songs :playlistName="playlistName" v-if="currentTab === 'Songs'" />
+      <Songs @playSong="playSong" :playlistName="playlistName" v-if="currentTab === 'Songs'" />
       <SearchSongs @playSong="playSong" :searchQuary="searchQuary" v-if="currentTab==='SearchSongs'"/>
     </div>
     <Player 
